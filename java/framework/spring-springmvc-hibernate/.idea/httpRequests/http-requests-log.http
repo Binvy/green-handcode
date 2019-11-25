@@ -1,0 +1,56 @@
+GET http://localhost:8080/1
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-11-25T033710.404.html
+
+###
+
+GET http://localhost:8080/1
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-11-25T033450.404.html
+
+###
+
+GET http://localhost:8080
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-11-25T033200.200.html
+
+###
+
+GET http://localhost:8080/user/1
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-11-25T033148.404.html
+
+###
+
+GET http://localhost:8080/user/add
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-11-25T033139.404.html
+
+###
+
+GET http://localhost:8080/user?id=1
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-11-25T033037.404.html
+
+###
+
+GET http://localhost:8080/user/1
+Accept: */*
+Cache-Control: no-cache
+
+<> 2019-11-25T032949.404.html
+
+###
+

@@ -10,7 +10,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>1.11</java.version>
         <java.encoding>UTF-8</java.encoding>
         <spring.version>5.2.1.RELEASE</spring.version>
         <springmvc.version>5.2.1.RELEASE</springmvc.version>
@@ -19,6 +19,12 @@
         <mysql.version>5.1.38</mysql.version>
         <junit.version>4.12</junit.version>
         <lombok.version>1.18.8</lombok.version>
+        <javax.annotation.version>1.3.2</javax.annotation.version>
+        <slf4j.version>1.7.29</slf4j.version>
+        <log4j2.version>2.12.1</log4j2.version>
+        <jcl.over.version>1.7.6</jcl.over.version>
+        <jul.over.version>1.7.6</jul.over.version>
+        <log4j12.api.version>2.8.2</log4j12.api.version>
     </properties>
 
     <dependencies>
@@ -51,6 +57,12 @@
             <artifactId>spring-orm</artifactId>
             <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aspects</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
 
         <!-- springmvc -->
         <dependency>
@@ -88,6 +100,55 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>${javax.annotation.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency> <!-- 桥接：告诉Slf4j使用Log4j2 -->
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-web</artifactId>
+            <version>${log4j2.version}</version>
+        </dependency>
+
+        <dependency> <!-- 桥接：jcl，不是升级不需要 -->
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${jcl.over.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId><!-- 桥接：jul，不是升级不需要 -->
+            <artifactId>jul-to-slf4j</artifactId>
+            <version>${jul.over.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency><!--适配log4j 1.x，不是升级不需要 -->
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+            <version>${log4j12.api.version}</version>
         </dependency>
 
     </dependencies>
