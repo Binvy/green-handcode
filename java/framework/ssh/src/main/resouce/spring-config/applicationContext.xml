@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xmlns:context="http://www.springframework.org/schema/context"
+           xmlns:tx="http://www.springframework.org/schema/tx"
+           xmlns:aop="http://www.springframework.org/schema/aop"
+           xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--********************************************配置Spring***************************************-->
+
+    <!-- 导入properties配置文件 -->
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>classpath:resource/*.properties</value>
+                <!-- 如果有多个配置文件，可在此处继续添加 -->
+            </list>
+        </property>
+    </bean>
+
+    <!-- springIOC自动扫描组件 -->
+    <context:component-scan base-package="com.binvi">
+        <!-- 扫描时跳过 @Controller 注解的JAVA类（控制器） -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+
+    <!--********************************************配置hibernate********************************************-->
+    <!-- 数据库连接池配置 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性：驱动类、地址、用户名、密码 -->
+        <property name="driverClassName" value="${jdbc.driver}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+
+        <property name="filters" value="stat" />    <!-- 配置监控统计拦截的filters -->
+        <property name="proxyFilters">
+            <list>
+                <ref bean="log-filter"></ref>
+            </list>
+        </property>
+
+        <property name="maxActive" value="20" />    <!-- 最大连接池数数量 -->
+        <property name="initialSize" value="1" />   <!-- 初始化连接池数数量 -->
+        <property name="minIdle" value="1" />       <!-- 最小连接池数数量 -->
+        <property name="maxWait" value="60000" />   <!-- 配置获取连接等待超时的时间 -->
+
+        <!-- 配置间隔多久进行一次检测，检测需要关闭的空闲连接，单位：毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <!-- 连接保持空闲而不被驱逐的最长时间，单位：毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <!-- 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，
+             执行validationQuery检测连接是否有效(建议配置为true，不影响性能，并且保证安全性) -->
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />       <!-- 申请连接时执行validationQuery检测连接是否有效 -->
+        <property name="testOnReturn" value="false" />       <!-- 归还连接时执行validationQuery检测连接是否有效 -->
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxOpenPreparedStatements" value="20" />
+
+        <property name="asyncInit" value="true" /> <!-- 如果有initialSize数量较多时，打开会加快应用启动时间 -->
+    </bean>
+
+    <bean id="log-filter" class="com.alibaba.druid.filter.logging.Log4j2Filter">
+        <property name="connectionLogEnabled" value="false" />
+        <property name="statementLogEnabled" value="false" />
+        <property name="resultSetLogEnabled" value="true" />
+        <property name="statementExecutableSqlLogEnable" value="true" />
+     </bean>
+
+    <!-- 配置session工厂 -->
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="com.binvi.entity"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop> <!-- hibernate根据实体自动生成数据库表 -->
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>           <!-- 指定数据库方言 -->
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>         <!-- 在控制台显示执行的数据库操作语句 -->
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>     <!-- SQL格式化 -->
+            </props>
+        </property>
+    </bean>
+
+    <!-- 配置一个hibernateTemplate对象，这个对象spring中XXXTemplate类似，代替了session，在需要session的地方注入hibernateTemplate，代替session来执行持久化操作。-->
+    <bean id="hibernateTemplate" class="org.springframework.orm.hibernate5.HibernateTemplate" depends-on="sessionFactory">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!-- 事务管理配置 -->
+    <bean id="hibernateTransactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <!-- 通知 -->
+    <tx:advice id="txAdvice" transaction-manager="hibernateTransactionManager">
+        <tx:attributes>
+            <!-- 事务传播 -->
+            <tx:method name="save*" propagation="REQUIRED"/>
+            <tx:method name="insert*" propagation="REQUIRED"/>
+            <tx:method name="add*" propagation="REQUIRED"/>
+            <tx:method name="create*" propagation="REQUIRED"/>
+            <tx:method name="delete*" propagation="REQUIRED"/>
+            <tx:method name="update*" propagation="REQUIRED"/>
+            <tx:method name="find*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="select*" propagation="SUPPORTS" read-only="true"/>
+            <tx:method name="get*" propagation="SUPPORTS" read-only="true"/>
+        </tx:attributes>
+    </tx:advice>
+    <!-- 切面 -->
+    <aop:config>
+        <!-- 切入点表达式 -->
+        <aop:pointcut id="pointCut" expression="execution(* com.binvi.*.*(..))"/>
+        <!-- 配置事务增强 -->
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="pointCut"/>
+    </aop:config>
+
+</beans>
