@@ -8,13 +8,12 @@
 
 - springcloud: TODO
 
-- spring-springmvc-hibernate
+- [spring-springmvc-hibernate](https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-springmvc-hibernate)
 
-- spring-springmvc-mybatis
+- [spring-springmvc-mybatis](https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-springmvc-mybatis)
 
-- spring-struts2-hibernate
-
-- [spring-struts2-mybatis]: https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-struts-mybatis
+- [spring-struts-hibernate](https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-struts-hibernate)
+- [spring-struts-mybatis](https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-struts-mybatis)
 
 ## 框架架构
 
