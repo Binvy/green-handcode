@@ -1,0 +1,45 @@
+<!DOCTYPE generatorConfiguration PUBLIC
+		"-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+		"http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<!-- mybatis逆向工程 生成器配置 -->
+<generatorConfiguration>
+	<context id="ssm_demo" targetRuntime="MyBatis3">
+		<commentGenerator>
+			<property name="suppressDate" value="true"/>
+			<property name="suppressAllComments" value="true"/>
+		</commentGenerator>
+
+		<jdbcConnection driverClass="com.mysql.jdbc.Driver" connectionURL="jdbc:mysql://localhost:3306/demo"
+						userId="root" password="binvi">
+			<property name="nullCatalogMeansCurrent" value="true" />
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false"/>
+		</javaTypeResolver>
+
+		<javaModelGenerator targetPackage="com.demo.model" targetProject="D:\workspace\green-handcode\java\framework\spring-struts-mybatis\src\main\java">
+			<property name="enableSubPackages" value="true"/>
+			<property name="trimStrings" value="true"/>
+		</javaModelGenerator>
+
+		<sqlMapGenerator targetPackage="com.demo.mapper" targetProject="D:\workspace\green-handcode\java\framework\spring-struts-mybatis\src\main\java">
+			<property name="enableSubPackages" value="true"/>
+		</sqlMapGenerator>
+
+		<javaClientGenerator type="XMLMAPPER" targetPackage="com.demo.mapper" targetProject="D:\workspace\green-handcode\java\framework\spring-struts-mybatis\src\main\resources\com.demo.mapper">
+			<property name="enableSubPackages" value="true"/>
+		</javaClientGenerator>
+
+		<table tableName="person"
+			   domainObjectName="Person"
+			   enableCountByExample="true"
+			   enableUpdateByExample="true"
+			   enableDeleteByExample="true"
+			   enableSelectByExample="true"
+			   selectByExampleQueryId="true">
+		</table>
+
+		<table tableName="user"></table>
+	</context>
+</generatorConfiguration>

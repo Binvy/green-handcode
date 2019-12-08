@@ -1,0 +1,254 @@
+卷 workspace 的文件夹 PATH 列表
+卷序列号为 02E0-2FB2
+D:.
+│  dir.txt
+│  pom.xml
+│  spring-struts-mybatis.iml
+│  
+├─src
+│  ├─main
+│  │  ├─java
+│  │  │  └─com
+│  │  │      └─demo
+│  │  │          ├─action
+│  │  │          │      LoginAction.java
+│  │  │          │      OrderAction.java
+│  │  │          │      SystemAction.java
+│  │  │          │      UserAction.java
+│  │  │          │      
+│  │  │          ├─interceptor
+│  │  │          │      SessionInterceptor.java
+│  │  │          │      
+│  │  │          ├─manager
+│  │  │          │  └─impl
+│  │  │          ├─mapper
+│  │  │          │      PersonMapper.java
+│  │  │          │      UserMapper.java
+│  │  │          │      
+│  │  │          ├─model
+│  │  │          │      Person.java
+│  │  │          │      PersonExample.java
+│  │  │          │      User.java
+│  │  │          │      UserExample.java
+│  │  │          │      
+│  │  │          ├─service
+│  │  │          │  │  UserService.java
+│  │  │          │  │  
+│  │  │          │  └─impl
+│  │  │          │          UserServiceImpl.java
+│  │  │          │          
+│  │  │          └─util
+│  │  │                  MybatisGeneratorUtil.java
+│  │  │                  
+│  │  ├─resources
+│  │  │  │  generatorConfig.xml
+│  │  │  │  jdbc.properties
+│  │  │  │  log4j2.xml
+│  │  │  │  mybatis.xml
+│  │  │  │  struts-module1.xml
+│  │  │  │  struts-module2.xml
+│  │  │  │  struts.properties
+│  │  │  │  struts.xml
+│  │  │  │  
+│  │  │  ├─com
+│  │  │  │  └─demo
+│  │  │  │      └─mapper
+│  │  │  │              PersonMapper.xml
+│  │  │  │              UserMapper.xml
+│  │  │  │              
+│  │  │  └─spring
+│  │  │          spring-dao.xml
+│  │  │          spring-manager.xml
+│  │  │          spring-service.xml
+│  │  │          
+│  │  └─webapp
+│  │      │  error.jsp
+│  │      │  exception.jsp
+│  │      │  index.jsp
+│  │      │  login.jsp
+│  │      │  portal.jsp
+│  │      │  
+│  │      └─WEB-INF
+│  │          │  applicationContext.xml
+│  │          │  web.xml
+│  │          │  
+│  │          └─page
+│  │                  dashboard.jsp
+│  │                  default.jsp
+│  │                  order.jsp
+│  │                  user.jsp
+│  │                  
+│  └─test
+│      └─com
+│          └─demo
+│              ├─action
+│              ├─manager
+│              ├─mapper
+│              ├─model
+│              ├─service
+│              └─util
+└─target
+    │  spring-struts-mybatis.war
+    │  
+    ├─classes
+    │  │  generatorConfig.xml
+    │  │  jdbc.properties
+    │  │  log4j2.xml
+    │  │  mybatis.xml
+    │  │  struts-module1.xml
+    │  │  struts-module2.xml
+    │  │  struts.properties
+    │  │  struts.xml
+    │  │  
+    │  ├─com
+    │  │  └─demo
+    │  │      ├─action
+    │  │      │      LoginAction.class
+    │  │      │      OrderAction.class
+    │  │      │      SystemAction.class
+    │  │      │      UserAction.class
+    │  │      │      
+    │  │      ├─interceptor
+    │  │      │      SessionInterceptor.class
+    │  │      │      
+    │  │      ├─mapper
+    │  │      │      PersonMapper.class
+    │  │      │      PersonMapper.xml
+    │  │      │      UserMapper.class
+    │  │      │      UserMapper.xml
+    │  │      │      
+    │  │      ├─model
+    │  │      │      Person.class
+    │  │      │      PersonExample$Criteria.class
+    │  │      │      PersonExample$Criterion.class
+    │  │      │      PersonExample$GeneratedCriteria.class
+    │  │      │      PersonExample.class
+    │  │      │      User.class
+    │  │      │      UserExample$Criteria.class
+    │  │      │      UserExample$Criterion.class
+    │  │      │      UserExample$GeneratedCriteria.class
+    │  │      │      UserExample.class
+    │  │      │      
+    │  │      ├─service
+    │  │      │  │  UserService.class
+    │  │      │  │  
+    │  │      │  └─impl
+    │  │      │          UserServiceImpl.class
+    │  │      │          
+    │  │      └─util
+    │  │              MybatisGeneratorUtil.class
+    │  │              
+    │  └─spring
+    │          spring-dao.xml
+    │          spring-manager.xml
+    │          spring-service.xml
+    │          
+    ├─generated-sources
+    │  └─annotations
+    └─spring-struts-mybatis
+        │  error.jsp
+        │  exception.jsp
+        │  index.jsp
+        │  login.jsp
+        │  portal.jsp
+        │  
+        ├─META-INF
+        │      MANIFEST.MF
+        │      
+        └─WEB-INF
+            │  applicationContext.xml
+            │  web.xml
+            │  
+            ├─classes
+            │  │  generatorConfig.xml
+            │  │  jdbc.properties
+            │  │  log4j2.xml
+            │  │  mybatis.xml
+            │  │  struts-module1.xml
+            │  │  struts-module2.xml
+            │  │  struts.properties
+            │  │  struts.xml
+            │  │  
+            │  ├─com
+            │  │  └─demo
+            │  │      ├─action
+            │  │      │      LoginAction.class
+            │  │      │      OrderAction.class
+            │  │      │      SystemAction.class
+            │  │      │      UserAction.class
+            │  │      │      
+            │  │      ├─dao
+            │  │      ├─interceptor
+            │  │      │      SessionInterceptor.class
+            │  │      │      
+            │  │      ├─mapper
+            │  │      │      PersonMapper.class
+            │  │      │      PersonMapper.xml
+            │  │      │      UserMapper.class
+            │  │      │      UserMapper.xml
+            │  │      │      
+            │  │      ├─model
+            │  │      │      Person.class
+            │  │      │      PersonExample$Criteria.class
+            │  │      │      PersonExample$Criterion.class
+            │  │      │      PersonExample$GeneratedCriteria.class
+            │  │      │      PersonExample.class
+            │  │      │      User.class
+            │  │      │      UserExample$Criteria.class
+            │  │      │      UserExample$Criterion.class
+            │  │      │      UserExample$GeneratedCriteria.class
+            │  │      │      UserExample.class
+            │  │      │      
+            │  │      ├─service
+            │  │      │  │  UserService.class
+            │  │      │  │  
+            │  │      │  └─impl
+            │  │      │          UserServiceImpl.class
+            │  │      │          
+            │  │      └─util
+            │  │              MybatisGeneratorUtil.class
+            │  │              
+            │  ├─com.demo.mapper
+            │  │      PersonMapper.xml
+            │  │      UserMapper.xml
+            │  │      
+            │  ├─META-INF
+            │  │      spring-struts-mybatis.kotlin_module
+            │  │      
+            │  └─spring
+            │          spring-dao.xml
+            │          spring-manager.xml
+            │          spring-service.xml
+            │          
+            ├─lib
+            │      commons-fileupload-1.4.jar
+            │      commons-io-2.6.jar
+            │      commons-lang3-3.8.1.jar
+            │      freemarker-2.3.28.jar
+            │      javassist-3.20.0-GA.jar
+            │      log4j-api-2.12.1.jar
+            │      log4j-core-2.12.1.jar
+            │      mybatis-3.5.3.jar
+            │      mybatis-generator-core-1.4.0.jar
+            │      mybatis-spring-2.0.3.jar
+            │      mysql-connector-java-5.1.6.jar
+            │      ognl-3.1.21.jar
+            │      spring-aop-5.2.1.RELEASE.jar
+            │      spring-beans-5.2.1.RELEASE.jar
+            │      spring-context-5.2.1.RELEASE.jar
+            │      spring-core-5.2.1.RELEASE.jar
+            │      spring-expression-5.2.1.RELEASE.jar
+            │      spring-jcl-5.2.1.RELEASE.jar
+            │      spring-jdbc-5.2.1.RELEASE.jar
+            │      spring-tx-5.2.1.RELEASE.jar
+            │      spring-web-5.2.1.RELEASE.jar
+            │      struts2-core-2.5.20.jar
+            │      struts2-json-plugin-2.5.20.jar
+            │      struts2-spring-plugin-2.5.20.jar
+            │      
+            └─page
+                    dashboard.jsp
+                    default.jsp
+                    order.jsp
+                    user.jsp
+                    

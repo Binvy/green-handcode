@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:mybatis="http://mybatis.org/schema/mybatis-spring"
+	   xmlns:tx="http://www.springframework.org/schema/tx" xmlns:context="http://www.springframework.org/schema/context"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring.xsd
+	   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:property-placeholder location="classpath*:jdbc.properties"/>
+
+	<!-- enable component scanning and autowire (beware that this does not enable mapper scanning!) -->
+	<context:component-scan base-package="com.demo.service" />
+
+	<!-- dataSource config -->
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+
+	<!-- transaction manager, use JtaTransactionManager for global tx -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<constructor-arg ref="dataSource"/>
+	</bean>
+
+	<!-- enable transaction demarcation with annotations -->
+	<tx:annotation-driven />
+
+	<!-- define the SqlSessionFactory -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<!--<property name="configLocation" value="classpath*:mybatis.xml" />-->
+		<property name="dataSource" ref="dataSource" />
+		<property name="typeAliasesPackage" value="com.demo.model" />
+		<property name="mapperLocations" value="classpath*:com/demo/mapper/**/*.xml"/>
+	</bean>
+
+	<!-- define the SqlSession -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactory"/>
+	</bean>
+
+	<!-- scan for mappers and let them be autowired -->
+	<mybatis:scan base-package="com.demo.mapper" />
+
+	<!-- import beans from other config file -->
+	<import resource="classpath*:spring/spring-dao.xml" />
+	<import resource="classpath*:spring/spring-service.xml" />
+	<import resource="classpath*:spring/spring-manager.xml" />
+</beans>
