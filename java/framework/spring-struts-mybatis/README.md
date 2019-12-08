@@ -44,30 +44,30 @@
 │  │  │          │          UserServiceImpl.java
 │  │  │          │          
 │  │  │          └─util
-│  │  │                  MybatisGeneratorUtil.java 		// mybatis逆向工程生成器
+│  │  │                  MybatisGeneratorUtil.java      // mybatis逆向工程生成器
 │  │  │                  
 │  │  ├─resources
-│  │  │  │  generatorConfig.xml							// mybatis逆向工程生成器配置
-│  │  │  │  jdbc.properties								// jdbc数据库连接配置
-│  │  │  │  log4j2.xml									// log4j2日志配置
-│  │  │  │  mybatis.xml									// mybatis配置（无特殊配置可省略）
-│  │  │  │  struts-module1.xml							// struts模块化配置1（可省略）
-│  │  │  │  struts-module2.xml							// struts模块化配置2（可省略）
-│  │  │  │  struts.properties							// struts属性配置（可省略）
-│  │  │  │  struts.xml									// struts基础配置
+│  │  │  │  generatorConfig.xml                         // mybatis逆向工程生成器配置
+│  │  │  │  jdbc.properties                             // jdbc数据库连接配置
+│  │  │  │  log4j2.xml                                  // log4j2日志配置
+│  │  │  │  mybatis.xml                                 // mybatis配置（无特殊配置可省略）
+│  │  │  │  struts-module1.xml                          // struts模块化配置1（可省略）
+│  │  │  │  struts-module2.xml                          // struts模块化配置2（可省略）
+│  │  │  │  struts.properties                           // struts属性配置（可省略）
+│  │  │  │  struts.xml                                  // struts基础配置
 │  │  │  │  
 │  │  │  ├─com
 │  │  │  │  └─demo
-│  │  │  │      └─mapper								// mapperXML配置（与mapper路径相同）
+│  │  │  │      └─mapper                                // mapperXML配置（与mapper路径相同）
 │  │  │  │              PersonMapper.xml			
 │  │  │  │              UserMapper.xml
 │  │  │  │              
-│  │  │  └─spring										// spring模块化配置（可省略）
-│  │  │          spring-dao.xml							// dao层bean配置
-│  │  │          spring-manager.xml						// manager层bean配置
-│  │  │          spring-service.xml						// service层bean配置
+│  │  │  └─spring                                       // spring模块化配置（可省略）
+│  │  │          spring-dao.xml                         // dao层bean配置
+│  │  │          spring-manager.xml                     // manager层bean配置
+│  │  │          spring-service.xml                     // service层bean配置
 │  │  │          
-│  │  └─webapp											// webapp
+│  │  └─webapp
 │  │      │  error.jsp
 │  │      │  exception.jsp
 │  │      │  index.jsp
@@ -75,10 +75,10 @@
 │  │      │  portal.jsp
 │  │      │  
 │  │      └─WEB-INF
-│  │          │  applicationContext.xml					// spring应用上下文配置
-│  │          │  web.xml								// web应用配置
+│  │          │  applicationContext.xml                 // spring应用上下文配置
+│  │          │  web.xml                                // web应用配置
 │  │          │  
-│  │          └─page									// 页面文件夹
+│  │          └─page                                    // 页面文件夹
 │  │                  dashboard.jsp
 │  │                  default.jsp
 │  │                  order.jsp
