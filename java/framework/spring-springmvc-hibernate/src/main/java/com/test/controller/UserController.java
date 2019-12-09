@@ -16,22 +16,22 @@ public class UserController {
     private UserService userService;
 
     @GetMapping(path = "/{id}")
-    public String get(@PathVariable String id) {
+    public String get(@PathVariable String id) throws Exception {
         return userService.getById(id).toString();
     }
 
     @GetMapping(path = "/all")
-    public String getAll() {
+    public String getAll() throws Exception {
         return userService.getAll().toString();
     }
 
     @PostMapping(path = "/add/{user}")
-    public void add(@RequestBody User user) {
+    public void add(@RequestBody User user) throws Exception {
         userService.save(user);
     }
 
     @PostMapping(path = "/delete/{user}")
-    public void delete(@RequestBody User user) {
+    public void delete(@RequestBody User user) throws Exception {
         userService.delete(user);
     }
 

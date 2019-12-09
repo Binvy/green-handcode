@@ -9,14 +9,14 @@ import java.util.List;
 
 public interface UserService {
 
-    void save(User user);
+    void save(User user) throws Exception;
 
-    void delete(User user);
+    void delete(User user) throws Exception;
 
-    void update(User user);
+    void update(User user) throws Exception;
 
-    User getById(String id);
+    User getById(String id) throws Exception;
 
-    List<User> getAll();
+    List<User> getAll() throws Exception;
 
 }
