@@ -4,28 +4,27 @@
 
 框架整合脚手架，可直接下载使用。包括：
 
-springboot : https://start.spring.io/
+- springboot : https://start.spring.io/
 
-springcloud: TODO
+- springcloud: TODO
 
-spring-springmvc-hibernate
+- [spring-springmvc-hibernate](https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-springmvc-hibernate)
 
-spring-springmvc-mybatis
+- [spring-springmvc-mybatis](https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-springmvc-mybatis)
 
-spring-struts2-hibernate
-
-spring-struts2-mybatis
+- [spring-struts-hibernate](https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-struts-hibernate)
+- [spring-struts-mybatis](https://github.com/Binvy/green-handcode/tree/master/java/framework/spring-struts-mybatis)
 
 ## 框架架构
 
-springboot
+- springboot
 
-spring
+- spring
 
-springmvc
+- springmvc
 
-struts2
+- struts2
 
-mybatis
+- mybatis
 
-hibernate
+- hibernate
