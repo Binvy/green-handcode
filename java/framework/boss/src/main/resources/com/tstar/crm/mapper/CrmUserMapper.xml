@@ -1,0 +1,1061 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tstar.crm.mapper.CrmUserMapper">
+  <resultMap id="BaseResultMap" type="com.tstar.crm.model.CrmUser">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="CUSTOMER_ID" jdbcType="VARCHAR" property="customerId" />
+    <result column="BUSINESS_TYPE" jdbcType="VARCHAR" property="businessType" />
+    <result column="BUSINESS_KEY" jdbcType="VARCHAR" property="businessKey" />
+    <result column="NAME" jdbcType="VARCHAR" property="name" />
+    <result column="DEPARTMENT_ID" jdbcType="VARCHAR" property="departmentId" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="LINK_PHONE" jdbcType="VARCHAR" property="linkPhone" />
+    <result column="STATUS" jdbcType="INTEGER" property="status" />
+    <result column="PAY_POLICY" jdbcType="INTEGER" property="payPolicy" />
+    <result column="REL_TABLE" jdbcType="VARCHAR" property="relTable" />
+    <result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+    <result column="CREATE_TIME" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="REMARK" jdbcType="VARCHAR" property="remark" />
+    <result column="EFFECTIVE_TIME" jdbcType="TIMESTAMP" property="effectiveTime" />
+    <result column="EXPIRY_TIME" jdbcType="TIMESTAMP" property="expiryTime" />
+    <result column="BILLING_DAY" jdbcType="INTEGER" property="billingDay" />
+    <result column="DEPARTMENT_NAME" jdbcType="VARCHAR" property="departmentName" />
+    <result column="PAY_POLICY_DESC" jdbcType="VARCHAR" property="payPolicyDesc" />
+    <result column="BUSINESS_TYPE_DESC" jdbcType="VARCHAR" property="businessTypeDesc" />
+    <result column="STATUS_DESC" jdbcType="VARCHAR" property="statusDesc" />
+    <result column="BUSINESS_AREA" jdbcType="VARCHAR" property="businessArea" />
+    <result column="USER_AREA" jdbcType="VARCHAR" property="userArea" />
+    <result column="POST_ADDRESS" jdbcType="VARCHAR" property="postAddress" />
+    <result column="CREDITOR_KEY" jdbcType="VARCHAR" property="creditorKey" />
+    <result column="CONVERT_TIME" jdbcType="TIMESTAMP" property="convertTime" />
+    <result column="BUSINESS_STA" jdbcType="VARCHAR" property="businessSta" />
+    <result column="CENTRIX_ID" jdbcType="VARCHAR" property="centrixid" />
+    <result column="CENTRIX_NAME" jdbcType="VARCHAR" property="centrixname" />
+    <result column="LINKER" jdbcType="VARCHAR" property="linker" />
+    <result column="PAUSE_TIME" jdbcType="TIMESTAMP" property="pauseTime" />
+    <result column="USER_TYPE" jdbcType="INTEGER" property="userType" />
+    <result column="PURPOSE" jdbcType="INTEGER" property="purpose" />
+    <result column="REL_USER_ID" jdbcType="VARCHAR" property="relUserId" />
+    <result column="REL_BUSINESS_KEY" jdbcType="VARCHAR" property="relBusinessKey" />
+    <result column="USER_NUM" jdbcType="VARCHAR" property="userNum" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, PAUSE_TIME, LINKER, CUSTOMER_ID, BUSINESS_TYPE, BUSINESS_KEY, NAME, 
+    DEPARTMENT_ID, ADDRESS, LINK_PHONE, STATUS, PAY_POLICY, REL_TABLE, CREATOR, 
+    CREATE_TIME, UPDATE_TIME, REMARK, EFFECTIVE_TIME, EXPIRY_TIME, BILLING_DAY, 
+    BUSINESS_AREA, USER_AREA, POST_ADDRESS, CREDITOR_KEY,
+    CONVERT_TIME, BUSINESS_STA,CENTRIX_ID, LINKER, PAUSE_TIME,
+    USER_TYPE, PURPOSE, REL_USER_ID, REL_BUSINESS_KEY,USER_NUM,
+    (SELECT NAME FROM res_dept WHERE res_dept.ID=DEPARTMENT_ID) AS DEPARTMENT_NAME,
+    (SELECT NAME FROM ref_pay_policy WHERE ref_pay_policy.ID=PAY_POLICY) AS PAY_POLICY_DESC,
+    (SELECT NAME FROM ref_business_type WHERE ref_business_type.ID=BUSINESS_TYPE) AS BUSINESS_TYPE_DESC,
+    (SELECT CENTRIX_NAME FROM sid_centrix WHERE sid_centrix.ID=CENTRIX_ID) AS CENTRIX_NAME,
+    (SELECT NAME FROM ref_user_status WHERE ref_user_status.ID=STATUS) AS STATUS_DESC
+  </sql>
+  <select id="countByCriteria" parameterType="map" resultType="int">
+    select 
+    count(*)
+    from crm_user
+    where 1=1
+    <if test="businessKey != null and businessKey != ''">
+    	and BUSINESS_KEY = #{businessKey, jdbcType=VARCHAR}
+    </if>
+    <if test="businessType != null and businessType != ''">
+    	and BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}
+    </if>
+    <if test="fullText != null and fullText != ''">
+    	and (
+    		NAME LIKE concat('%', #{fullText}, '%')
+    		or
+    		BUSINESS_KEY LIKE concat(#{fullText}, '%')
+    		or 
+    		ADDRESS LIKE  concat('%', #{fullText}, '%')
+    		or 
+    		LINK_PHONE LIKE concat('%', #{fullText}, '%')
+    		)
+    </if>
+    <if test="status != null">
+    	and STATUS = #{status, jdbcType=INTEGER}
+    </if>
+    <if test="beginStatus != null">
+    	and STATUS &gt;= #{beginStatus, jdbcType=INTEGER}
+    </if>
+    <if test="endStatus != null">
+    	and STATUS &lt;= #{endStatus, jdbcType=INTEGER}
+    </if>
+    <if test="businessSta != null">
+    	and BUSINESS_STA = #{businessSta, jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="countByCustomerId" parameterType="map" resultType="int">
+    select 
+    count(*)
+    from crm_user
+    where STATUS IN (2,3,4,5,6)
+    <if test="customerId != null and customerId != ''">
+    	and CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+    </if>
+    <if test="businessType != null and businessType != ''">
+    	and BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}
+    </if>
+  </select>
+  
+  <select id="selectCustomerUserInfo" parameterType="java.lang.String" resultType="map">
+    select 
+    	a.customer_id as customerId, b.customer_no as customerNo, b.name as customerName,
+    	a.id as userId, a.business_key as businessKey, a.name as userName
+    from crm_user a, crm_customer b
+    where a.customer_id = b.id
+    and a.business_key = #{0}
+    and a.status in (2, 3, 4)
+  </select>
+  
+  <select id="selectCustomerInfo" parameterType="map" resultType="map">
+    select 
+    	id as customerId, customer_no as customerNo, name as customerName,
+    	'' as userId, '' as businessKey, '' as userName
+    from crm_customer 
+    where 1=1
+    <if test="customerNo != null and customerNo != ''">
+    	and CUSTOMER_NO = #{customerNo, jdbcType=VARCHAR}
+    </if>
+    <if test="customerName != null and customerName != ''">
+    	and NAME like concat('%', #{customerName, jdbcType=VARCHAR}, '%')
+    </if>
+  </select>
+  
+  <select id="countEffectiveByKey" parameterType="java.lang.String" resultType="int">
+    select 
+    count(*)
+    from crm_user
+    where 1=1
+    and BUSINESS_TYPE = #{0}
+    and BUSINESS_KEY = #{1}
+    and STATUS &lt; 91
+  </select>
+   <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where 1=1
+    </select>
+       <select id="selectByCustomerIdOne" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where CUSTOMER_ID = #{0}
+    ORDER BY ID
+    limit 0, 1
+    </select>
+  <select id="selectByPage" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where 1=1
+    <if test="businessKey != null and businessKey != ''">
+    	and BUSINESS_KEY = #{businessKey, jdbcType=VARCHAR}
+    </if>
+    <if test="businessType != null and businessType != ''">
+    	and BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}
+    </if>
+    <if test="fullText != null and fullText != ''">
+    	and (
+    		NAME LIKE concat('%', #{fullText}, '%')
+    		or
+    		BUSINESS_KEY LIKE concat(#{fullText}, '%')
+    		or 
+    		ADDRESS LIKE  concat('%', #{fullText}, '%')
+    		or 
+    		LINK_PHONE LIKE concat('%', #{fullText}, '%')
+    		)
+    </if>
+    <if test="status != null">
+    	and STATUS = #{status, jdbcType=INTEGER}
+    </if>
+    <if test="beginStatus != null">
+    	and STATUS &gt;= #{beginStatus, jdbcType=INTEGER}
+    </if>
+    <if test="endStatus != null">
+    	and STATUS &lt;= #{endStatus, jdbcType=INTEGER}
+    </if>
+    <if test="businessSta != null">
+    	and BUSINESS_STA = #{businessSta, jdbcType=VARCHAR}
+    </if>
+    order by BUSINESS_KEY
+    limit #{start}, #{length}
+  </select>
+
+  <select id="selectForPay" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where 1=1
+    <if test="businessKey != null and businessKey != ''">
+    	and BUSINESS_KEY = #{businessKey, jdbcType=VARCHAR}
+    </if>
+    <if test="businessType != null and businessType != ''">
+    	and BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}
+    </if>
+    <if test="userName != null and userName != ''">
+    	and NAME = #{userName, jdbcType=VARCHAR}
+    </if>
+    <if test="userAddress != null and userAddress != ''">
+    	and ADDRESS like concat('%', #{userAddress, jdbcType=VARCHAR}, '%')
+    </if>
+    order by BUSINESS_TYPE desc
+  </select>
+
+  <select id="selectByTime" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where BUSINESS_TYPE = #{0}
+    and BUSINESS_KEY = #{1}
+    and effective_time &lt; #{2} 
+    and (expiry_time is null or expiry_time  &gt; #{2}) 
+    order by expiry_time
+    limit 0, 1
+  </select>
+  
+  <select id="selectByBusinessType" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR}
+    and STATUS = 2
+  </select>
+
+  <select id="selectByBusinessKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where BUSINESS_KEY = #{businessKey,jdbcType=VARCHAR}
+    and STATUS IN (2, 3, 4)
+    order by BUSINESS_TYPE desc, EFFECTIVE_TIME desc
+    limit 0, 1
+  </select>
+  
+  <select id="selectByBusinessKeyAndType" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where BUSINESS_KEY = #{0,jdbcType=VARCHAR}
+    and BUSINESS_TYPE = #{1,jdbcType=VARCHAR}
+    and STATUS IN (2, 3, 4)
+    order by BUSINESS_TYPE desc, EFFECTIVE_TIME desc
+    limit 0, 1
+  </select>
+  <select id="selectByBusinessKeyAndType1" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where BUSINESS_KEY = #{0,jdbcType=VARCHAR}
+    and instr(#{1}, BUSINESS_TYPE)>0
+    and STATUS IN (2, 3, 4)
+    order by BUSINESS_TYPE desc, EFFECTIVE_TIME desc
+    limit 0, 1
+  </select>
+  <select id="findBusinessKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where BUSINESS_KEY = #{0}
+    and STATUS IN (91)
+  </select>
+  
+  <select id="findCustormUserCount" parameterType="java.lang.String" resultType="int">
+    select 
+    count(*)
+    from crm_user
+   where BUSINESS_KEY = #{0}
+    and STATUS IN (91)
+   </select>
+  <select id="selectbyUser" parameterType="java.lang.String" resultType="String">
+    select 
+    LINK_PHONE
+    from crm_user
+    where BUSINESS_KEY = #{0}
+  </select>
+    <select id="selectByCentrix" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where BUSINESS_KEY = #{businessKey,jdbcType=VARCHAR}
+    and STATUS IN (2, 3, 4) and CENTRIX_ID IS NOT NULL 
+    order by EFFECTIVE_TIME desc
+    limit 0, 1
+  </select>
+
+  <select id="selectDebitUserKeys" parameterType="java.lang.String" resultType="map">
+    select 
+    	BUSINESS_KEY as businessKey
+    from crm_user
+    where CREDITOR_KEY = #{0}
+    and STATUS IN (2, 3, 4)
+  </select>
+
+  <select id="selectByLinkPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where BUSINESS_TYPE = #{0}
+    and LINK_PHONE = #{1}
+    and STATUS IN (2, 3, 4)
+    limit 0, 1
+  </select>
+
+  <select id="selectDeletingUsers" parameterType="map" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where STATUS = 4
+    and now() >= date_add(CONVERT_TIME, interval 3 month)
+    <if test="businessType != null and businessType != ''">
+        and BUSINESS_TYPE = #{businessType}
+    </if>
+    <if test="businessKey != null and businessKey != ''">
+        and BUSINESS_KEY = #{businessKey}
+    </if>
+  </select>
+
+  <select id="selectRelUser" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where 1=1
+    and (REL_USER_ID=#{0} or ID=#{0})
+    and ID NOT IN (#{1})
+  </select>
+
+  <select id="selectRunningPrepaidBroadUsers" parameterType="map" resultType="map">
+    select 
+      a.CUSTOMER_ID as customerId, d.NAME as customerName, d.CUSTOMER_NO as customerNo,
+      a.ID as userId, a.BUSINESS_KEY as businessKey, a.PAUSE_TIME as pauseTime, 
+      a.NAME as userName, a.LINK_PHONE linkPhone, a.ADDRESS as userAddress,
+      a.BUSINESS_TYPE as businessType,
+	  b.ID as accountId, b.AMOUNT as amount, b.DONATION as donation, 
+	  c.ITEM_NAME as itemName,
+	  c.TERM as term, c.ITEM_PRICE as itemPrice, c.EFFECTIVE_TIME as effectiveTime, c.due_time as dueTime
+    from crm_user a, crm_account b, crm_order_item c, crm_customer d
+    where a.CUSTOMER_ID = b.CUSTOMER_ID
+    and a.CUSTOMER_ID = d.ID
+	and a.ID = c.ORDER_ID
+	and c.STATUS = 2
+	and c.ITEM_TYPE = 1
+	and c.SALE_TYPE = 2
+	and a.BUSINESS_TYPE IN ('a', 'b')
+    and a.STATUS = 2
+    and a.PAY_POLICY = 2
+    <if test="userId != null">
+      and a.ID = #{userId}
+    </if>
+    <if test="businessKey != null">
+      and a.BUSINESS_KEY = #{businessKey}
+    </if>
+    <if test="name != null">
+      and a.NAME like concat('%', #{name}, '%')
+    </if>
+    <if test="name != null">
+      and a.ADDRESS like concat('%', #{address}, '%')
+    </if>
+  </select>
+  
+  <select id="selectByCustomerId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+   <include refid="Base_Column_List" />
+    from crm_user
+    where CUSTOMER_ID = #{0}
+    and STATUS IN (2, 3, 4)
+    limit 0, 500
+  </select>
+  
+  <select id="findByCustomerId" parameterType="map" resultMap="BaseResultMap">
+    select 
+   <include refid="Base_Column_List" />
+    from crm_user
+    where 1=1 
+    <if test="businessType != null and businessType != ''">
+    	and BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}
+    </if>
+     <if test="customerId != null and customerId != ''">
+    	and CUSTOMER_ID = #{customerId, jdbcType=VARCHAR}
+    </if>
+    and STATUS IN (2, 3, 4)
+    <if test="start != null">
+    limit #{start}, #{length}
+    </if>
+    order by BUSINESS_TYPE desc
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from crm_user
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from crm_user
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tstar.crm.model.CrmUser" >
+    insert into crm_user (ID, PAUSE_TIME, LINKER, 
+      CUSTOMER_ID, BUSINESS_TYPE, BUSINESS_KEY, 
+      NAME, DEPARTMENT_ID, ADDRESS, 
+      LINK_PHONE, STATUS, PAY_POLICY, 
+      REL_TABLE, EFFECTIVE_TIME, EXPIRY_TIME, 
+      CREATOR, CREATE_TIME, UPDATE_TIME, 
+      REMARK, BILLING_DAY, BUSINESS_AREA, 
+      USER_AREA, POST_ADDRESS, CREDITOR_KEY, 
+      CONVERT_TIME, BUSINESS_STA, CENTRIX_ID, 
+      USER_TYPE, PURPOSE, REL_USER_ID, 
+      REL_BUSINESS_KEY, USER_NUM)
+    values (#{id,jdbcType=VARCHAR}, #{pauseTime,jdbcType=TIMESTAMP}, #{linker,jdbcType=VARCHAR}, 
+      #{customerId,jdbcType=VARCHAR}, #{businessType,jdbcType=VARCHAR}, #{businessKey,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{departmentId,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{linkPhone,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, #{payPolicy,jdbcType=INTEGER}, 
+      #{relTable,jdbcType=VARCHAR}, #{effectiveTime,jdbcType=TIMESTAMP}, #{expiryTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{billingDay,jdbcType=INTEGER}, #{businessArea,jdbcType=VARCHAR}, 
+      #{userArea,jdbcType=VARCHAR}, #{postAddress,jdbcType=VARCHAR}, #{creditorKey,jdbcType=VARCHAR}, 
+      #{convertTime,jdbcType=TIMESTAMP}, #{businessSta,jdbcType=VARCHAR}, #{centrixid,jdbcType=VARCHAR}, 
+      #{userType,jdbcType=INTEGER}, #{purpose,jdbcType=INTEGER}, #{relUserId,jdbcType=VARCHAR}, 
+      #{relBusinessKey,jdbcType=VARCHAR}, #{userNum,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tstar.crm.model.CrmUser" >
+    insert into crm_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="pauseTime != null" >
+        PAUSE_TIME,
+      </if>
+      <if test="linker != null" >
+        LINKER,
+      </if>
+      <if test="customerId != null" >
+        CUSTOMER_ID,
+      </if>
+      <if test="businessType != null" >
+        BUSINESS_TYPE,
+      </if>
+      <if test="businessKey != null" >
+        BUSINESS_KEY,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="departmentId != null" >
+        DEPARTMENT_ID,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="linkPhone != null" >
+        LINK_PHONE,
+      </if>
+      <if test="status != null" >
+        STATUS,
+      </if>
+      <if test="payPolicy != null" >
+        PAY_POLICY,
+      </if>
+      <if test="relTable != null" >
+        REL_TABLE,
+      </if>
+      <if test="effectiveTime != null" >
+        EFFECTIVE_TIME,
+      </if>
+      <if test="expiryTime != null" >
+        EXPIRY_TIME,
+      </if>
+      <if test="creator != null" >
+        CREATOR,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="remark != null" >
+        REMARK,
+      </if>
+      <if test="billingDay != null" >
+        BILLING_DAY,
+      </if>
+      <if test="businessArea != null" >
+        BUSINESS_AREA,
+      </if>
+      <if test="userArea != null" >
+        USER_AREA,
+      </if>
+      <if test="postAddress != null" >
+        POST_ADDRESS,
+      </if>
+      <if test="creditorKey != null" >
+        CREDITOR_KEY,
+      </if>
+      <if test="convertTime != null" >
+        CONVERT_TIME,
+      </if>
+      <if test="businessSta != null" >
+        BUSINESS_STA,
+      </if>
+      <if test="centrixid != null" >
+        CENTRIX_ID,
+      </if>
+      <if test="userType != null" >
+        USER_TYPE,
+      </if>
+      <if test="purpose != null" >
+        PURPOSE,
+      </if>
+      <if test="relUserId != null" >
+        REL_USER_ID,
+      </if>
+      <if test="relBusinessKey != null" >
+        REL_BUSINESS_KEY,
+      </if>
+      <if test="userNum != null" >
+        USER_NUM,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="pauseTime != null" >
+        #{pauseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="linker != null" >
+        #{linker,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessKey != null" >
+        #{businessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="linkPhone != null" >
+        #{linkPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="payPolicy != null" >
+        #{payPolicy,jdbcType=INTEGER},
+      </if>
+      <if test="relTable != null" >
+        #{relTable,jdbcType=VARCHAR},
+      </if>
+      <if test="effectiveTime != null" >
+        #{effectiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiryTime != null" >
+        #{expiryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="billingDay != null" >
+        #{billingDay,jdbcType=INTEGER},
+      </if>
+      <if test="businessArea != null" >
+        #{businessArea,jdbcType=VARCHAR},
+      </if>
+      <if test="userArea != null" >
+        #{userArea,jdbcType=VARCHAR},
+      </if>
+      <if test="postAddress != null" >
+        #{postAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="creditorKey != null" >
+        #{creditorKey,jdbcType=VARCHAR},
+      </if>
+      <if test="convertTime != null" >
+        #{convertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessSta != null" >
+        #{businessSta,jdbcType=VARCHAR},
+      </if>
+      <if test="centrixid != null" >
+        #{centrixid,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="purpose != null" >
+        #{purpose,jdbcType=INTEGER},
+      </if>
+      <if test="relUserId != null" >
+        #{relUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="relBusinessKey != null" >
+        #{relBusinessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="userNum != null" >
+        #{userNum,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tstar.crm.model.CrmUser" >
+    update crm_user
+    <set >
+      <if test="pauseTime != null" >
+        PAUSE_TIME = #{pauseTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="linker != null" >
+        LINKER = #{linker,jdbcType=VARCHAR},
+      </if>
+      <if test="customerId != null" >
+        CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null" >
+        BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessKey != null" >
+        BUSINESS_KEY = #{businessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentId != null" >
+        DEPARTMENT_ID = #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="linkPhone != null" >
+        LINK_PHONE = #{linkPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        STATUS = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="payPolicy != null" >
+        PAY_POLICY = #{payPolicy,jdbcType=INTEGER},
+      </if>
+      <if test="relTable != null" >
+        REL_TABLE = #{relTable,jdbcType=VARCHAR},
+      </if>
+      <if test="effectiveTime != null" >
+        EFFECTIVE_TIME = #{effectiveTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiryTime != null" >
+        EXPIRY_TIME = #{expiryTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        CREATOR = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        REMARK = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="billingDay != null" >
+        BILLING_DAY = #{billingDay,jdbcType=INTEGER},
+      </if>
+      <if test="businessArea != null" >
+        BUSINESS_AREA = #{businessArea,jdbcType=VARCHAR},
+      </if>
+      <if test="userArea != null" >
+        USER_AREA = #{userArea,jdbcType=VARCHAR},
+      </if>
+      <if test="postAddress != null" >
+        POST_ADDRESS = #{postAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="creditorKey != null" >
+        CREDITOR_KEY = #{creditorKey,jdbcType=VARCHAR},
+      </if>
+      <if test="convertTime != null" >
+        CONVERT_TIME = #{convertTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="businessSta != null" >
+        BUSINESS_STA = #{businessSta,jdbcType=VARCHAR},
+      </if>
+      <if test="centrixid != null" >
+        CENTRIX_ID = #{centrixid,jdbcType=VARCHAR},
+      </if>
+      <if test="userType != null" >
+        USER_TYPE = #{userType,jdbcType=INTEGER},
+      </if>
+      <if test="purpose != null" >
+        PURPOSE = #{purpose,jdbcType=INTEGER},
+      </if>
+      <if test="relUserId != null" >
+        REL_USER_ID = #{relUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="relBusinessKey != null" >
+        REL_BUSINESS_KEY = #{relBusinessKey,jdbcType=VARCHAR},
+      </if>
+      <if test="userNum != null" >
+        USER_NUM = #{userNum,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tstar.crm.model.CrmUser">
+    update crm_user
+    set PAUSE_TIME = #{pauseTime,jdbcType=TIMESTAMP},
+      LINKER = #{linker,jdbcType=VARCHAR},
+      CUSTOMER_ID = #{customerId,jdbcType=VARCHAR},
+      BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+      BUSINESS_KEY = #{businessKey,jdbcType=VARCHAR},
+      NAME = #{name,jdbcType=VARCHAR},
+      DEPARTMENT_ID = #{departmentId,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      LINK_PHONE = #{linkPhone,jdbcType=VARCHAR},
+      STATUS = #{status,jdbcType=INTEGER},
+      PAY_POLICY = #{payPolicy,jdbcType=INTEGER},
+      REL_TABLE = #{relTable,jdbcType=VARCHAR},
+      EFFECTIVE_TIME = #{effectiveTime,jdbcType=TIMESTAMP},
+      EXPIRY_TIME = #{expiryTime,jdbcType=TIMESTAMP},
+      CREATOR = #{creator,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      REMARK = #{remark,jdbcType=VARCHAR},
+      BILLING_DAY = #{billingDay,jdbcType=INTEGER},
+      BUSINESS_AREA = #{businessArea,jdbcType=VARCHAR},
+      USER_AREA = #{userArea,jdbcType=VARCHAR},
+      POST_ADDRESS = #{postAddress,jdbcType=VARCHAR},
+      CREDITOR_KEY = #{creditorKey,jdbcType=VARCHAR},
+      CONVERT_TIME = #{convertTime,jdbcType=TIMESTAMP},
+      BUSINESS_STA = #{businessSta,jdbcType=VARCHAR},
+      CENTRIX_ID = #{centrixid,jdbcType=VARCHAR},
+      USER_TYPE = #{userType,jdbcType=INTEGER},
+      PURPOSE = #{purpose,jdbcType=INTEGER},
+      REL_USER_ID = #{relUserId,jdbcType=VARCHAR},
+      REL_BUSINESS_KEY = #{relBusinessKey,jdbcType=VARCHAR},
+      USER_NUM = #{userNum,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateStatus">
+    update crm_user
+    set 
+      STATUS = #{1}
+    where ID = #{0}
+  </update>
+  <update id="updateCreditorKey">
+    update crm_user
+    set 
+      CREDITOR_KEY = #{1}
+    where CREDITOR_KEY = #{0}
+    and STATUS NOT IN (90, 91)
+  </update>
+    <update id="updatePauserTime">
+    update crm_user
+    set 
+      PAUSE_TIME = #{1}
+    where BUSINESS_KEY = #{0}
+    
+  </update>
+  
+  <!-- 信息查询   用户综合查询 -->
+  <select id="countByuserInfoCriteria" parameterType="map" resultType="int">
+    select 
+    count(*)
+    from crm_user u, crm_customer m 
+    where u.CUSTOMER_ID = m.ID
+    <if test="fullText != null and fullText != ''">
+    	and (
+    		u.BUSINESS_KEY LIKE concat('%', #{fullText}, '%')
+    		or
+    		u.NAME LIKE concat('%',#{fullText}, '%')
+    		or 
+    		m.CUSTOMER_NO LIKE  concat('%', #{fullText}, '%')
+    		or 
+    		u.LINK_PHONE LIKE concat('%', #{fullText}, '%')
+    		)
+    </if>
+    <if test="exactText != null and exactText != ''">
+    	and (
+    		u.BUSINESS_KEY = #{exactText, jdbcType=VARCHAR}
+    		or
+    		u.NAME = #{exactText, jdbcType=VARCHAR}
+    		or 
+    		m.CUSTOMER_NO = #{exactText, jdbcType=VARCHAR}
+    		or 
+    		u.LINK_PHONE = #{exactText, jdbcType=VARCHAR}
+    		)
+    </if>
+    <if test="vipDesc != null">
+    	and m.VIP = #{vipDesc, jdbcType=INTEGER}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and u.EFFECTIVE_TIME &gt;= #{startTime, jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null and endTime !=''">
+      and u.EFFECTIVE_TIME &lt;= #{endTime, jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+    	and u.STATUS = #{status, jdbcType=INTEGER}
+    </if>
+    <if test="userType != null">
+    	and u.USER_TYPE = #{userType, jdbcType=INTEGER}
+    </if>
+    <if test="businessType != null and businessType != ''">    			
+		<choose>  
+			<when test="businessType != b">  
+				and u.BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}						
+			</when>  
+			<otherwise>   
+		        and (u.BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}
+				or u.BUSINESS_TYPE = 'a') 	
+			</otherwise>  
+	    </choose> 	
+    </if>  
+    <if test="userArea != null and userArea != ''">
+    	and u.USER_AREA = #{userArea, jdbcType=VARCHAR}
+    </if>
+    <if test="customerIds != null and customerIds != ''">
+    	and u.CUSTOMER_ID in
+    	<foreach item="item" index="index" collection="customerIds" open="(" separator="," close=")">#{item}</foreach>    	
+    </if>
+  </select>
+  
+  <select id="selectByuserInfoPage" parameterType="map" resultMap="BaseResultMap">
+    select 
+    u.ID,
+    u.BUSINESS_TYPE,
+    u.CUSTOMER_ID customerId,
+    u.BUSINESS_KEY,
+	m.CUSTOMER_NO customerDesc,
+	m.VIP vipDesc,
+	u. NAME,
+	u.LINK_PHONE,
+	u.ADDRESS,
+	u.USER_TYPE,
+	u.EFFECTIVE_TIME,
+	u.USER_AREA,
+	u. STATUS
+    from crm_user u, crm_customer m 
+    where u.CUSTOMER_ID = m.ID
+    <if test="fullText != null and fullText != ''">
+    	and (
+    		u.BUSINESS_KEY LIKE concat('%', #{fullText}, '%')
+    		or
+    		u.NAME LIKE concat('%',#{fullText}, '%')
+    		or 
+    		m.CUSTOMER_NO LIKE  concat('%', #{fullText}, '%')
+    		or 
+    		u.LINK_PHONE LIKE concat('%', #{fullText}, '%')
+    		)
+    </if>
+    <if test="exactText != null and exactText != ''">
+    	and (
+    		u.BUSINESS_KEY = #{exactText, jdbcType=VARCHAR}
+    		or
+    		u.NAME = #{exactText, jdbcType=VARCHAR}
+    		or 
+    		m.CUSTOMER_NO = #{exactText, jdbcType=VARCHAR}
+    		or 
+    		u.LINK_PHONE = #{exactText, jdbcType=VARCHAR}
+    		)
+    </if>
+    <if test="vipDesc != null">
+    	and m.VIP = #{vipDesc, jdbcType=INTEGER}
+    </if>
+    <if test="startTime != null and startTime != ''">
+      and u.EFFECTIVE_TIME &gt;= #{startTime, jdbcType=VARCHAR}
+    </if>
+    <if test="endTime != null and endTime !=''">
+      and u.EFFECTIVE_TIME &lt;= #{endTime, jdbcType=VARCHAR}
+    </if>
+    <if test="status != null">
+    	and u.STATUS = #{status, jdbcType=INTEGER}
+    </if>
+    <if test="userType != null">
+    	and u.USER_TYPE = #{userType, jdbcType=INTEGER}
+    </if>
+    <if test="businessType != null and businessType != ''">  
+		<choose>  
+			<when test="businessType != b">  
+				and u.BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}						
+			</when>  
+			<otherwise>   
+		        and (u.BUSINESS_TYPE = #{businessType, jdbcType=VARCHAR}
+				or u.BUSINESS_TYPE = 'a') 	
+			</otherwise>  
+	    </choose> 						
+    </if>
+    <if test="userArea != null and userArea != ''">
+    	and u.USER_AREA = #{userArea, jdbcType=VARCHAR}
+    </if>
+    <if test="customerIds != null and customerIds != ''">
+    	and u.CUSTOMER_ID in
+    	<foreach item="item" index="index" collection="customerIds" open="(" separator="," close=")">#{item}</foreach> 
+    </if>
+    order by u.EFFECTIVE_TIME desc
+    limit #{start}, #{length}
+  </select>
+  
+  <!-- 信息查询  账户资料综合查询 -->
+  <select id="countByaccountInfoCriteria" parameterType="map" resultType="int">
+    SELECT
+	COUNT(DISTINCT c.CUSTOMER_NO)
+	FROM
+	crm_customer c,
+	crm_user u,
+	crm_account a
+	WHERE
+	c.ID = u.CUSTOMER_ID
+	AND c.ID = a.CUSTOMER_ID     
+    <if test="userType != null">
+    	and c.CUSTOMER_TYPE = #{userType, jdbcType=INTEGER}
+    </if>
+    <if test="userArea != null and userArea != ''">
+    	and u.USER_AREA = #{userArea, jdbcType=VARCHAR}
+    </if>
+    <if test="payPolicy != null ">
+    	and u.PAY_POLICY = #{payPolicy, jdbcType=INTEGER}
+    </if>
+    <if test="businessKey != null and businessKey != ''">
+    	and u.BUSINESS_KEY LIKE concat(#{businessKey}, '%')
+    </if>
+    <if test="customerDesc != null and customerDesc != ''">
+    	and a.ACC_NO LIKE concat(#{customerDesc}, '%')
+    </if>
+    <if test="customerProp != null and customerProp != ''">
+    	and c.CUSTOMER_NO LIKE concat(#{customerProp}, '%')
+    	and c.CUSTOMER_PROP = '1'
+    </if>
+    <if test="bankAccDesc != null and bankAccDesc != ''">
+    	and a.BANK_ACC_OWNER LIKE concat(#{bankAccDesc}, '%')
+    </if>
+    <if test="statusDesc != null and statusDesc != ''">
+    	and c.STATUS = #{statusDesc, jdbcType=VARCHAR}
+    </if>
+    <if test="creditorKey != null and creditorKey != ''">
+    	and u.CREDITOR_KEY = #{creditorKey, jdbcType=VARCHAR}
+    </if>
+    <if test="customerId != null and customerId != ''">
+    	and c.DEPARTMENT_ID = #{customerId, jdbcType=VARCHAR}
+    	and c.CUSTOMER_PROP = '2'
+    </if>
+  </select>
+  
+  <select id="selectByaccountInfoPage" parameterType="map" resultMap="BaseResultMap">
+    SELECT
+    a.CUSTOMER_ID,
+    u.PAY_POLICY,
+    u.NAME,
+    c.CUSTOMER_TYPE userType,
+	c.CUSTOMER_NO customerDesc,
+    u.BUSINESS_KEY,
+  	a.BANK_ACC_OWNER bankAccDesc,
+  	u.CREDITOR_KEY,
+  	u.LINK_PHONE,
+  	c.STATUS statusDesc,
+  	c.REG_OUT_TIME regDesc,
+ 	u.ADDRESS,
+  	u.USER_AREA
+	FROM
+	crm_customer c,
+	crm_user u,
+	crm_account a
+	WHERE
+	c.ID = u.CUSTOMER_ID
+	AND c.ID = a.CUSTOMER_ID
+    <if test="userType != null">
+    	and c.CUSTOMER_TYPE = #{userType, jdbcType=INTEGER}
+    </if>
+    <if test="userArea != null and userArea != ''">
+    	and u.USER_AREA = #{userArea, jdbcType=VARCHAR}
+    </if>
+    <if test="payPolicy != null ">
+    	and u.PAY_POLICY = #{payPolicy, jdbcType=INTEGER}
+    </if>
+    <if test="businessKey != null and businessKey != ''">
+    	and u.BUSINESS_KEY LIKE concat(#{businessKey}, '%')
+    </if>
+    <if test="customerDesc != null and customerDesc != ''">
+    	and a.ACC_NO LIKE concat(#{customerDesc}, '%')
+    </if>
+    <if test="customerProp != null and customerProp != ''">
+    	and c.CUSTOMER_NO LIKE concat(#{customerProp}, '%')
+    	and c.CUSTOMER_PROP = '1'
+    </if>
+    <if test="bankAccDesc != null and bankAccDesc != ''">
+    	and a.BANK_ACC_OWNER LIKE concat(#{bankAccDesc}, '%')
+    </if>
+    <if test="statusDesc != null and statusDesc != ''">
+    	and c.STATUS = #{statusDesc, jdbcType=VARCHAR}
+    </if>
+    <if test="creditorKey != null and creditorKey != ''">
+    	and u.CREDITOR_KEY = #{creditorKey, jdbcType=VARCHAR}
+    </if>
+    <if test="customerId != null and customerId != ''">
+    	and c.DEPARTMENT_ID = #{customerId, jdbcType=VARCHAR}
+    	and c.CUSTOMER_PROP = '2'
+    </if>
+    GROUP BY c.CUSTOMER_NO
+    limit #{start}, #{length}
+  </select>
+  <!-- 查看用户信息中合同信息 -->
+  <select id="findCustomerInfoById" parameterType="java.lang.String" resultType="map">
+  SELECT
+	  c.CUSTOMER_NO customerDesc,
+      u.BUSINESS_KEY businessKey,
+  	  a.BANK_ACC_OWNER bankAccDesc,
+   	  u.ADDRESS address,
+     (SELECT NAME FROM ref_pay_policy WHERE ref_pay_policy.ID=u.PAY_POLICY) AS payPolicyDesc,
+     (SELECT NAME FROM ref_customer_type WHERE ref_customer_type.ID = c.CUSTOMER_TYPE) AS departmentName 
+	FROM
+	crm_customer c,
+	crm_user u,
+	crm_account a
+	WHERE
+	c.ID = u.CUSTOMER_ID
+	AND c.ID = a.CUSTOMER_ID
+	AND u.ID = #{id, jdbcType=VARCHAR}
+  </select>
+  <!-- 装机用户提取信息 -->
+  <select id="findByBusinessKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+  select id,customer_id,name,business_key from crm_user
+  where business_key = #{userKey, jdbcType=VARCHAR} 
+  </select>
+   <!-- 装机用户提取信息 -->
+  <select id="selectByUnabridged" parameterType="java.lang.String" resultMap="BaseResultMap"> 
+    select 
+     	<include refid="Base_Column_List" />
+    from crm_user
+    where 1=1 
+   	and (
+   		BUSINESS_KEY = #{unabridged, jdbcType=VARCHAR}
+   		or
+   		NAME = #{unabridged, jdbcType=VARCHAR}
+   		or 
+   		ADDRESS = #{unabridged, jdbcType=VARCHAR}
+   		or 
+   		LINK_PHONE = #{unabridged, jdbcType=VARCHAR}
+	)
+ 	limit 0,1	
+  </select>
+</mapper>

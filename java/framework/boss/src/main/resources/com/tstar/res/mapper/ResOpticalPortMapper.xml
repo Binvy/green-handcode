@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tstar.res.mapper.ResOpticalPortMapper">
+  <resultMap id="BaseResultMap" type="com.tstar.res.model.ResOpticalPort">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="DEVICE_CODE" jdbcType="VARCHAR" property="deviceCode" />
+    <result column="PORT_CODE" jdbcType="VARCHAR" property="portCode" />
+    <result column="PON_CODE" jdbcType="VARCHAR" property="ponCode" />
+    <result column="SUB_PORT_CODE" jdbcType="VARCHAR" property="subPortCode" />
+    <result column="ADDRESS" jdbcType="VARCHAR" property="address" />
+    <result column="SN_CODE" jdbcType="VARCHAR" property="snCode" />
+    <result column="MAC_CODE" jdbcType="VARCHAR" property="macCode" />
+    <result column="KEY_LOGIC" jdbcType="VARCHAR" property="keyLogic" />
+    <result column="KEY_PHY" jdbcType="VARCHAR" property="keyPhy" />
+    <result column="ODF" jdbcType="VARCHAR" property="odf" />
+    <result column="VOIP_MG" jdbcType="VARCHAR" property="voipMg" />
+    <result column="MG_MASK" jdbcType="VARCHAR" property="mgMask" />
+    <result column="NODE_ID" jdbcType="VARCHAR" property="nodeId" />
+    <result column="MGC_IP" jdbcType="VARCHAR" property="mgcIp" />
+    <result column="CVLAN" jdbcType="VARCHAR" property="cvlan" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, DEVICE_CODE, PORT_CODE, PON_CODE, SUB_PORT_CODE, ADDRESS, SN_CODE, MAC_CODE, 
+    KEY_LOGIC, KEY_PHY, ODF, VOIP_MG, MG_MASK, NODE_ID, MGC_IP, CVLAN
+  </sql>
+  
+  <select id="selectByKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from res_optical_port
+    where KEY_LOGIC=#{0}
+    and PON_CODE IS NOT NULL 
+  </select>
+  
+  <select id="selectTopFreeByAddress" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from res_optical_port
+    where ADDRESS=#{0}
+    and (KEY_LOGIC IS NULL OR KEY_LOGIC='')
+    limit 0, 1 
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from res_optical_port
+    where ID = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from res_optical_port
+    where ID = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.tstar.res.model.ResOpticalPort">
+    insert into res_optical_port (ID, DEVICE_CODE, PORT_CODE, 
+      PON_CODE, SUB_PORT_CODE, ADDRESS, 
+      SN_CODE, MAC_CODE, KEY_LOGIC, 
+      KEY_PHY, ODF, VOIP_MG, 
+      MG_MASK, NODE_ID, MGC_IP, 
+      CVLAN)
+    values (#{id,jdbcType=INTEGER}, #{deviceCode,jdbcType=VARCHAR}, #{portCode,jdbcType=VARCHAR}, 
+      #{ponCode,jdbcType=VARCHAR}, #{subPortCode,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, 
+      #{snCode,jdbcType=VARCHAR}, #{macCode,jdbcType=VARCHAR}, #{keyLogic,jdbcType=VARCHAR}, 
+      #{keyPhy,jdbcType=VARCHAR}, #{odf,jdbcType=VARCHAR}, #{voipMg,jdbcType=VARCHAR}, 
+      #{mgMask,jdbcType=VARCHAR}, #{nodeId,jdbcType=VARCHAR}, #{mgcIp,jdbcType=VARCHAR}, 
+      #{cvlan,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tstar.res.model.ResOpticalPort">
+    insert into res_optical_port
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        ID,
+      </if>
+      <if test="deviceCode != null">
+        DEVICE_CODE,
+      </if>
+      <if test="portCode != null">
+        PORT_CODE,
+      </if>
+      <if test="ponCode != null">
+        PON_CODE,
+      </if>
+      <if test="subPortCode != null">
+        SUB_PORT_CODE,
+      </if>
+      <if test="address != null">
+        ADDRESS,
+      </if>
+      <if test="snCode != null">
+        SN_CODE,
+      </if>
+      <if test="macCode != null">
+        MAC_CODE,
+      </if>
+      <if test="keyLogic != null">
+        KEY_LOGIC,
+      </if>
+      <if test="keyPhy != null">
+        KEY_PHY,
+      </if>
+      <if test="odf != null">
+        ODF,
+      </if>
+      <if test="voipMg != null">
+        VOIP_MG,
+      </if>
+      <if test="mgMask != null">
+        MG_MASK,
+      </if>
+      <if test="nodeId != null">
+        NODE_ID,
+      </if>
+      <if test="mgcIp != null">
+        MGC_IP,
+      </if>
+      <if test="cvlan != null">
+        CVLAN,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="deviceCode != null">
+        #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="portCode != null">
+        #{portCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ponCode != null">
+        #{ponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="subPortCode != null">
+        #{subPortCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="snCode != null">
+        #{snCode,jdbcType=VARCHAR},
+      </if>
+      <if test="macCode != null">
+        #{macCode,jdbcType=VARCHAR},
+      </if>
+      <if test="keyLogic != null">
+        #{keyLogic,jdbcType=VARCHAR},
+      </if>
+      <if test="keyPhy != null">
+        #{keyPhy,jdbcType=VARCHAR},
+      </if>
+      <if test="odf != null">
+        #{odf,jdbcType=VARCHAR},
+      </if>
+      <if test="voipMg != null">
+        #{voipMg,jdbcType=VARCHAR},
+      </if>
+      <if test="mgMask != null">
+        #{mgMask,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null">
+        #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="mgcIp != null">
+        #{mgcIp,jdbcType=VARCHAR},
+      </if>
+      <if test="cvlan != null">
+        #{cvlan,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tstar.res.model.ResOpticalPort">
+    update res_optical_port
+    <set>
+      <if test="deviceCode != null">
+        DEVICE_CODE = #{deviceCode,jdbcType=VARCHAR},
+      </if>
+      <if test="portCode != null">
+        PORT_CODE = #{portCode,jdbcType=VARCHAR},
+      </if>
+      <if test="ponCode != null">
+        PON_CODE = #{ponCode,jdbcType=VARCHAR},
+      </if>
+      <if test="subPortCode != null">
+        SUB_PORT_CODE = #{subPortCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="snCode != null">
+        SN_CODE = #{snCode,jdbcType=VARCHAR},
+      </if>
+      <if test="macCode != null">
+        MAC_CODE = #{macCode,jdbcType=VARCHAR},
+      </if>
+      <if test="keyLogic != null">
+        KEY_LOGIC = #{keyLogic,jdbcType=VARCHAR},
+      </if>
+      <if test="keyPhy != null">
+        KEY_PHY = #{keyPhy,jdbcType=VARCHAR},
+      </if>
+      <if test="odf != null">
+        ODF = #{odf,jdbcType=VARCHAR},
+      </if>
+      <if test="voipMg != null">
+        VOIP_MG = #{voipMg,jdbcType=VARCHAR},
+      </if>
+      <if test="mgMask != null">
+        MG_MASK = #{mgMask,jdbcType=VARCHAR},
+      </if>
+      <if test="nodeId != null">
+        NODE_ID = #{nodeId,jdbcType=VARCHAR},
+      </if>
+      <if test="mgcIp != null">
+        MGC_IP = #{mgcIp,jdbcType=VARCHAR},
+      </if>
+      <if test="cvlan != null">
+        CVLAN = #{cvlan,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tstar.res.model.ResOpticalPort">
+    update res_optical_port
+    set DEVICE_CODE = #{deviceCode,jdbcType=VARCHAR},
+      PORT_CODE = #{portCode,jdbcType=VARCHAR},
+      PON_CODE = #{ponCode,jdbcType=VARCHAR},
+      SUB_PORT_CODE = #{subPortCode,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      SN_CODE = #{snCode,jdbcType=VARCHAR},
+      MAC_CODE = #{macCode,jdbcType=VARCHAR},
+      KEY_LOGIC = #{keyLogic,jdbcType=VARCHAR},
+      KEY_PHY = #{keyPhy,jdbcType=VARCHAR},
+      ODF = #{odf,jdbcType=VARCHAR},
+      VOIP_MG = #{voipMg,jdbcType=VARCHAR},
+      MG_MASK = #{mgMask,jdbcType=VARCHAR},
+      NODE_ID = #{nodeId,jdbcType=VARCHAR},
+      MGC_IP = #{mgcIp,jdbcType=VARCHAR},
+      CVLAN = #{cvlan,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

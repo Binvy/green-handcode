@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+		"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+		"http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+	<package name="default" extends="json-default">
+		<result-types>
+			<result-type name="json" class="org.apache.struts2.json.JSONResult"/>
+			<result-type name="jsonActionRedirect" class="org.apache.struts2.json.JSONActionRedirectResult"/>
+		</result-types>
+
+		<!-- 采用json数据格式，package的extends必须是extends="json-default" -->
+		<!-- 并且必须要用到struts2的json-lib，struts2-json-plugin包 -->
+		<!-- 采用异步提交方式，result的type="json"，并且result节点值为空 -->
+		<interceptors>
+			<interceptor name="login" class="com.tstar.component.SessionInterceptor" />
+			<interceptor-stack name="sessionStack">
+				<interceptor-ref name="login" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="defaultStack" />
+		<default-action-ref name="login"></default-action-ref>
+		<default-class-ref class="com.opensymphony.xwork2.ActionSupport" />
+
+		<!-- 定义全局result -->
+		<global-results>
+			<result name="login">login.jsp</result>
+			<result name="error">error.jsp</result>
+			<result name="exception">exception.jsp</result>
+		</global-results>
+
+		<global-allowed-methods>regex:.*</global-allowed-methods>
+
+		<!--  定义全局异常处理映射-->
+		<global-exception-mappings>
+			<exception-mapping exception="java.lang.RuntimeException" result="error"/>
+			<exception-mapping exception="java.sql.SQLException" result="exception"/>
+		</global-exception-mappings>
+
+		<!-- 登录操作 -->
+		<action name="login" class="com.tstar.portal.action.LoginAction">
+			<result name="login" type="json"></result>
+			<result name="fail" type="dispatcher">login.jsp</result>
+			<result name="success" type="redirect">sysIndex!gotoPortal.do</result>
+			<interceptor-ref name="sessionStack" />
+		</action>
+
+		<!-- 系统 -->
+		<action name="sysIndex" class="com.tstar.portal.action.SystemAction">
+			<result name="portalPage" type="dispatcher">portal.jsp</result>
+			<result name="dashboardPage" type="dispatcher">/WEB-INF/page/dashboard.jsp</result>
+			<result name="getRecords" type="json"></result>
+			<interceptor-ref name="sessionStack" />
+		</action>
+	</package>
+
+	<include file="struts-module1.xml" />
+	<include file="struts-module2.xml" />
+</struts>

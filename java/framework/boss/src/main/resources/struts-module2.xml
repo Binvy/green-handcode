@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+		"-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+		"http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+	<!--<package name="order" namespace="/order" extends="struts-default">
+		<global-results>
+			<result name="success">/WEB-INF/page/order.jsp</result>
+		</global-results>
+		<action name="add" class="com.demo.action.OrderAction" method="add"/>
+		<action name="delete" class="com.demo.action.OrderAction" method="delete"/>
+		<action name="update" class="com.demo.action.OrderAction" method="update"/>
+		<action name="select" class="com.demo.action.OrderAction" method="select">
+			<result name="success">/WEB-INF/page/order.jsp</result>
+		</action>
+	</package>-->
+</struts>
