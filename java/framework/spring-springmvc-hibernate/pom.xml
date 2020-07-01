@@ -21,7 +21,7 @@
         <lombok.version>1.18.8</lombok.version>
         <javax.annotation.version>1.3.2</javax.annotation.version>
         <slf4j.version>1.7.29</slf4j.version>
-        <log4j2.version>2.12.1</log4j2.version>
+        <log4j2.version>2.13.3</log4j2.version>
         <jcl.over.version>1.7.6</jcl.over.version>
         <jul.over.version>1.7.6</jul.over.version>
         <log4j12.api.version>2.8.2</log4j12.api.version>
